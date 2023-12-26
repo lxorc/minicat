@@ -18,6 +18,6 @@ public class HttpProtocolUtil {
         String str404 = "<h1>404 NOT FOUND</h1>";
         return "HTTP/1.1 404 NOT FOUND\n" +
                 "Content-Length: " + str404.length() + "\n" +
-                "\r\n";
+                "\r\n" + str404;
     }
 }

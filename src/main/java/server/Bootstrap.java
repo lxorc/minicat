@@ -28,16 +28,25 @@ public class Bootstrap {
     public void start() throws IOException {
         ServerSocket serverSocket = new ServerSocket(port);
         System.out.println(">>>>>>>>>>>>>Minicat start！ on port: " + port);
-        // 需求1: 浏览器打开 http://localhost:8080/ 服务返回 'hello world'
+        // 需求1.0: 浏览器打开 http://localhost:8080/ 服务返回 'hello world'
+        // 需求2.0: 封装Request 和 Response 对象，返回html静态资源文件
 
         while (true) {
             Socket socket = serverSocket.accept();
+            InputStream inputStream = socket.getInputStream();
             OutputStream outputStream = socket.getOutputStream();
-            String msg = "hello world";
-            String responseText = HttpProtocolUtil.getHttpHeader200((long) msg.length()) + msg;
-            outputStream.write(responseText.getBytes());
+
+
+            Request request = new Request(inputStream);
+            Response response = new Response(outputStream);
+            response.outputHtml(request.getUrl());
+
             socket.close();
+
         }
+
+
+
 
 
     }
