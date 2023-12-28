@@ -23,6 +23,22 @@
         </plugins>
     </build>
 
+
+    <dependencies>
+        <!--SaxReader解析xml文件-->
+        <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>1.6.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jaxen</groupId>
+            <artifactId>jaxen</artifactId>
+            <version>1.1.6</version>
+        </dependency>
+
+    </dependencies>
 <!--    <properties>-->
 <!--        <maven.compiler.source>8</maven.compiler.source>-->
 <!--        <maven.compiler.target>8</maven.compiler.target>-->

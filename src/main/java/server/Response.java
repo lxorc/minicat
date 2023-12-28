@@ -40,12 +40,12 @@ public class Response {
         } else {
             // 输出404
             String responseText = HttpProtocolUtil.getHttpHeader404();
-            ouput(responseText);
+            output(responseText);
         }
 
     }
 
-    private void ouput(String responseText) throws IOException {
+    void output(String responseText) throws IOException {
         this.outputStream.write(responseText.getBytes());
     }
 }
