@@ -12,6 +12,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.*;
 
 /**
  * Minicat 的主类
@@ -19,8 +20,29 @@ import java.util.List;
 public class Bootstrap {
 
     // 定义一个soket 监听的端口号
-
     private int port = 8080;
+
+    // 定义一个线程池
+    // 初始大小
+    int corePoolSize = 10;
+    // 最大大小
+    int maximumPoolSize = 50;
+    // 活跃时间
+    long keepAliveTime = 100L;
+    // 活跃时间单位
+    TimeUnit unit = TimeUnit.SECONDS;
+    BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(50);
+    ThreadFactory threadFactory = Executors.defaultThreadFactory();
+    RejectedExecutionHandler handler = new ThreadPoolExecutor.AbortPolicy();
+    ThreadPoolExecutor executor = new ThreadPoolExecutor(
+            corePoolSize,
+            maximumPoolSize,
+            keepAliveTime,
+            unit,
+            workQueue,
+            threadFactory,
+            handler
+    );
 
     public int getPort() {
         return port;
@@ -45,7 +67,7 @@ public class Bootstrap {
         while (true) {
             Socket socket = serverSocket.accept();
             RequestProcessor requestProcessor = new RequestProcessor(socket, servletHashMap);
-            requestProcessor.start();
+            executor.execute(requestProcessor);
         }
 
 
