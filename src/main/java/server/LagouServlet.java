@@ -5,6 +5,14 @@ import java.io.IOException;
 public class LagouServlet extends HttpServlet{
     @Override
     public void doGet(Request request, Response response)  {
+
+        // 假装休眠
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         String content = "<h1>lagou servlet</h1>";
 
         try {

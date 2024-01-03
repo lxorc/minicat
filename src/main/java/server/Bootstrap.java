@@ -1,16 +1,13 @@
 package server;
 
-import com.sun.org.apache.xml.internal.resolver.readers.SAXCatalogReader;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
-import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -41,33 +38,14 @@ public class Bootstrap {
         // 需求1.0: 浏览器打开 http://localhost:8080/ 服务返回 'hello world'
         // 需求2.0: 封装Request 和 Response 对象，返回html静态资源文件
         // 需求3.0: 增加动态资源的请求
+        // 需求3.1: 使用多线程
+        //      解决问题：多个请求会卡住
+        // 需求3.1: 使用多线程 + 线程池
 
         while (true) {
             Socket socket = serverSocket.accept();
-            InputStream inputStream = socket.getInputStream();
-            OutputStream outputStream = socket.getOutputStream();
-
-            // 封装 Request 和 Response 对象
-            Request request = new Request(inputStream);
-            Response response = new Response(outputStream);
-            HttpServlet httpServlet = servletHashMap.get(request.getUrl());
-
-            // 静态资源处理
-            if (servletHashMap.get(request.getUrl()) != null) {
-                // 动态资源 servlet 请求
-                try {
-                    httpServlet.service(request, response);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            } else {
-                response.outputHtml(request.getUrl());
-            }
-
-
-
-            socket.close();
-
+            RequestProcessor requestProcessor = new RequestProcessor(socket, servletHashMap);
+            requestProcessor.start();
         }
 
 
